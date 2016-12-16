@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="description" content="">
+        <meta name="author" content="Daniel Correa">
+
+        <title>NULL Paste</title>
+
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="css/styles/obsidian.css"  rel="stylesheet">
+        <link href="css/null-paste.css"  rel="stylesheet">
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/sjcl.js"></script>
+        <script src="js/inflate.js"></script>
+        <script src="js/deflate.js"></script>
+        <script src="js/highlight.pack.js"></script>
+        <script src="js/FileSaver.js"></script>
+        <script src="js/qrcode.min.js"></script>
+        <script src="js/coin.js"></script>
+        <script src="js/flash_detect_min.js"></script>
+        <script src="js/ZeroClipboard.min.js"></script>
+        <script src="js/null-paste.js"></script>
+    </head>
+
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#paste_navbar">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" id="brand_link">NULL Paste</a>
+                </div>
+                
+                <div class="collapse navbar-collapse" id="paste_navbar">
+                    <ul class="nav navbar-nav">
+                        <li><a id="stats">Stats</a></li>
+                        <li><a id="about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="waitdialog" tabindex="-1" role="dialog" aria-labelledby="waitlabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="waitlabel">Processing</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="progress">
+                          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="aboutdialog" tabindex="-1" role="dialog" aria-labelledby="aboutlabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="aboutlabel">About</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="list-group">
+                            <div class="list-group-item list-group-item-danger">
+                                <h4 class="list-group-item-heading">Warning</h4>
+                                <div class="list-group-item-text">
+                                    <p>Before using this site, please take a look on these resources as they show you some caveats</p>
+                                    <ul>
+                                        <li><a href="http://tonyarcieri.com/whats-wrong-with-webcrypto" target="_blank">What's wrong with in-browser cryptography?</a></li>
+                                        <li><a href="http://matasano.com/articles/javascript-cryptography/" target="_blank">Javascript Cryptography Considered Harmful</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <h4 class="list-group-item-heading">Features</h4>
+                                <div class="list-group-item-text">
+                                    <p>Now, if you feel comfortable using it, look at some of the unique features we have for you</p>
+                                    <ol>
+                                        <li>
+                                            <a href="http://ajaxpatterns.org/Host-Proof_Hosting" target="_blank">Host proof hosting</a>
+                                            using the <a href="http://bitwiseshiftleft.github.io/sjcl/" target="_blank">Stanford Javascript Crypto Library</a>
+                                        </li>
+                                        <li>
+                                            <a href="http://en.wikipedia.org/wiki/HTTP_Secure" target="_blank">HTTPS</a>
+                                            with <a href="http://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security" target="_blank">HTTP Strict Transport Security</a> support
+                                        </li>
+                                        <li>
+                                            Use of <a href="http://en.wikipedia.org/wiki/PBKDF2" target="_blank">PBKDF2-HMAC-SHA-256</a> for key derivation
+                                        </li>
+                                        <li>
+                                            Use of <a href="http://en.wikipedia.org/wiki/Authenticated_encryption" target="_blank">authenticated encryption</a> with AES-256-GCM for content encryption
+                                        </li>
+                                        <li><a href="https://www.ssllabs.com/ssltest/analyze.html?d=paste.null-life.com" target="_blank">Strong SSL Cipher Suite configuration and SSL certificate</a></li>
+                                        <li>Forced expiration from 5 minutes to 1 week</li>
+                                        <li>Burn content after reading</li>
+                                        <li>Strong password generation and password protection</li>
+                                        <li>Drag and drop file support</li>
+                                        <li>Clipboard copy, download content, and raw view support</li>
+                                        <li>Paste stats (total pastes, views, average size, average expiration, burnts)</li>
+                                        <li>Automatic language highlighting</li>
+                                        <li>Mobile-friendly (responsive, QR Code generation)</li>
+                                        <li>Open source project at <a href="https://github.com/sinfocol/NULL-Paste">https://github.com/sinfocol/NULL-Paste</a></li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <h4 class="list-group-item-heading">How it works</h4>
+                                <div class="list-group-item-text">
+                                    NULL paste uses PBKDF2-HMAC-SHA-256 and AES-256-GCM to protect the paste content,
+                                    all the data is proccesed by the client and it is never stored on plaintext on the server.
+                                    Check out this amazing diagram we have made!
+                                    <br><br>
+                                    <img src="" id="paste_diagram" alt="NULL Paste diagram" class="img-responsive img-rounded center-block" />
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <h4 class="list-group-item-heading">Contact us</h4>
+                                <div class="list-group-item-text">
+                                    Feel free to <a href="http://www.google.com/recaptcha/mailhide/d?k=01oHoJQFrMaiQyt2-CqJWwPQ==&c=A-_iUfNtp0IHIGfsXOTbGBFpgANxLhc81X_9mO9Iglg=" target="_blank">contact us</a> for any question regarding the paste, or any feature you would like to see 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal fade" id="statsdialog" tabindex="-1" role="dialog" aria-labelledby="statslabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="statslabel">Stats</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                              <span class="badge" id="stats_pastes"></span>
+                              Total number of pastes
+                            </li>
+                            <li class="list-group-item">
+                              <span class="badge" id="stats_views"></span>
+                              Total number of views
+                            </li>
+                            <li class="list-group-item">
+                              <span class="badge" id="stats_sizes"></span>
+                              Total stored length
+                            </li>
+                            <li class="list-group-item">
+                              <span class="badge" id="stats_expirations"></span>
+                              Expiration average
+                            </li>
+                            <li class="list-group-item">
+                              <span class="badge" id="stats_burns"></span>
+                              Burn after reading pastes
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="postdialog" tabindex="-1" role="dialog" aria-labelledby="postlabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="postlabel">Paste status</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                            <div class="form-group">
+                                <span id="poststatus" class="label"></span>
+                            </div>
+                            <div class="form-group">
+                                <input id="postdetail" type="text" class="form-control" readonly />
+                            </div>
+                            <div class="form-group">
+                                <div id="qrcode_status"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="qrdialog" tabindex="-1" role="dialog" aria-labelledby="qrlabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="qrlabel">QR Code</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="qrcode_dialog"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row row-offcanvas row-offcanvas-right">
+                <div class="col-xs-12 col-sm-9">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Private paste</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="new_paste">
+                                <textarea class="form-control" id="paste_content" name="paste_content" required></textarea><br />
+                                <div id="dropfile">
+                                    <h4><span>OR</span></h4>
+                                    <div id="drop_zone">Drop source file here</div>
+                                </div>
+                            </div>
+                            <div id="old_paste">
+                                <div class="row">
+                                    <div class="col-md-4">Created <span id="paste_creation" class="badge"></span></div>
+                                    <div class="col-md-4">Expires <span id="paste_expires" class="badge"></span></div>
+                                    <div class="col-md-4">Views <span id="paste_views" class="badge"></span></div>
+                                </div>
+                                <br />
+                                <pre><code id="paste_content"></code></pre>
+                            </div>
+                            <div id="password_paste">
+                                    <div class="form-group">
+                                        <input type="password" class="form-control" id="password_input" placeholder="Password">
+                                    </div>
+                                    <a class="btn btn-default" id="decrypt_paste">Decrypt</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+                    <div id="new_paste_panel">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <h5 class="list-group-item-heading">Expiration</h5>
+                                <p class="list-group-item-text">
+                                    <select class="form-control" id="paste_expiration" name="paste_expiration">
+                                        <option value="5m">5 minutes</option>
+                                        <option value="15m">15 minutes</option>
+                                        <option value="30m">30 minutes</option>
+                                        <option value="1h">1 hour</option>
+                                        <option value="1d" selected>1 day</option>
+                                        <option value="1w">1 week</option>
+                                    </select>
+                                </p>
+                            </div>
+                            <div class="list-group-item">
+                                <p class="list-group-item-text">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" id="paste_burn" /> Burn after reading
+                                    </label>
+                                </p>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="paste_password" placeholder="Password (optional)" />
+                                </div>
+                                <a id="auto_generate" class="btn btn-default">Auto generate</a>
+                            </div>
+                            <a id="save_link" class="list-group-item">Save</a>
+                        </div>
+                    </div>
+                    <div id="old_paste_panel">
+                        <div class="list-group">
+                            <a id="new_paste_link" class="list-group-item">New paste</a>
+                            <a id="qrcode_generate_link" class="list-group-item">Generate QR Code (URL)</a>
+                            <a id="copy_link" class="list-group-item">Copy content to clipboard</a>
+                            <a id="download_link" class="list-group-item">Download</a>
+                            <a id="raw_link" class="list-group-item">Raw</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <footer>
+                <div class="pull-right">
+                    <script>
+                        CoinWidgetCom.go({
+                            wallet_address: "1NULLo3KCSKeCZeDQc7ZxY8xcbYiDGrnbY",
+                            currency: "bitcoin",
+                            counter: "count",
+                            alignment: "ar",
+                            qrcode: true,
+                            auto_show: false,
+                            lbl_button: "Donate",
+                            lbl_address: "NULL Life",
+                            lbl_count: "Donations",
+                            lbl_amount: "BTC"
+                        });
+                    </script>
+                </div>
+                <p>&copy; NULL Life 2008 - 2016</p>
+            </footer>
+        </div>
+    </body>
+</html>

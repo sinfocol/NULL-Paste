@@ -1,0 +1,13 @@
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set X-Permitted-Cross-Domain-Policies "master-only"
+Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
+Header set Content-Security-Policy "default-src 'self' 'unsafe-inline';"
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on [OR]
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^(.*)$ https://paste.null-life.com/ [R=301,L]
+</IfModule>
